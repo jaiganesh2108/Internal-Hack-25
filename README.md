@@ -1,4 +1,4 @@
-<h1 align="center"> the Authenticity Validator for Academia system </h1>
+<h1 align="center"> The Authenticity Validator for Academia system </h1>
 
 ## A well-organized folder and file structure for the frontend (Next.js) and backend     (Node.js/Express) parts of this project, tailored specifically for the Authenticity Validator for Academia system.
 
@@ -77,3 +77,4 @@ nodejs-backend/
 ├── docker-compose.yml         # For containerized deployment
 └── README.md
 ```
+<h1 align="center"> Thank You! </h1>
