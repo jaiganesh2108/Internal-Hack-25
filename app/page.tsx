@@ -1,103 +1,103 @@
-import Image from "next/image";
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex flex-col items-center justify-between">
+      {/* Header */}
+      <header className="w-full flex justify-between items-center px-8 py-6 bg-white shadow-sm">
+        <div className="flex items-center space-x-2">
+          <span className="text-2xl font-bold text-indigo-600">VerifyCert</span>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+        <nav className="flex gap-4">
+          <Link
+            href="/"
+            className="text-sm font-medium text-gray-700 hover:text-indigo-600"
+            >
+            Login
+          </Link>
+
+          <Link href="/"
+            className="text-sm font-medium text-gray-700 hover:text-indigo-600">Sign Up
+          </Link>
+          <Link
+            href="/"
+            className="text-sm font-medium text-gray-700 hover:text-indigo-600"
+            >
+          </Link>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <section className="w-full min-h-screen bg-grid flex flex-col md:flex-row items-center justify-center px-6">
+        {/* Left Side (Image) */}
+        <div className="flex-1 mt-10 md:mt-0 flex justify-center">
+          <img 
+            src="/hero-certificates.png" 
+            alt="Certificate verification illustration" 
+            className="w-full max-w-sm md:max-w-md"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+        </div>
+
+        {/* Right Side (Text) */}
+        <div className="flex-1 text-center md:text-left md:pl-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-gray-900">
+            Verify certificates instantly, <span className="text-indigo-600"> Prevent Fraud. Build Trust.</span>
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mt-4 mb-8">
+              Trusted by universities, employers, and institutions, our platform provides a secure, blockchain-backed verification system to protect credentials from fraud. 
+              Instantly confirm the legitimacy of academic and professional certificates with a simple scan or click. 
+              Designed for students, universities, and recruiters, it ensures trust, saves time, and safeguards the integrity of qualifications worldwide.
+          </p>
+          <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
+            <Link href="/"
+              className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-full shadow hover:bg-indigo-700 transition">
+              For Students
+            </Link>
+            <Link href="/"
+              className="px-6 py-3 bg-gray-100 text-indigo-700 font-semibold rounded-full shadow hover:bg-indigo-200 transition">
+              For Universities
+            </Link>
+            <Link href="/"
+              className="px-6 py-3 bg-gray-100 text-indigo-700 font-semibold rounded-full shadow hover:bg-indigo-200 transition">
+              For Employers
+            </Link>
+          </div>
+          <div className="mt-6">
+            <span className="text-gray-400 text-xs">Institutions/Admin?</span>
+            <Link href="/login"
+              className="ml-2 text-indigo-600 underline font-medium text-xs">
+              Login / Sign up
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="w-full bg-white py-12">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">How It Works</h2>
+          <div className="grid md:grid-cols-3 gap-5">
+            <div className="bg-indigo-50 p-6 rounded-xl shadow">
+              <h3 className="font-bold text-lg mb-3 text-indigo-700">1. Simple Upload</h3>
+              <p className="text-gray-600 text-sm">Users or institutions upload/submit certificate codes or scan QR codes.</p>
+            </div>
+            <div className="bg-indigo-50 p-6 rounded-xl shadow">
+              <h3 className="font-bold text-lg mb-3 text-indigo-700">2. Instant Validation</h3>
+              <p className="text-gray-600 text-sm">Our system checks the authenticity from secure, university-verified databases in real-time.</p>
+            </div>
+            <div className="bg-indigo-50 p-6 rounded-xl shadow">
+              <h3 className="font-bold text-lg mb-3 text-indigo-700">3. Results & Actions</h3>
+              <p className="text-gray-600 text-sm">See instant results: verified, expired, or invalid.
+              Institutions & admins manage uploads, analytics, and users with dedicated dashboards.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="w-full bg-gray-50 py-6 text-center text-gray-400 text-xs border-t mt-12">
+        &copy; 2025 VerifyCert. Powered by NextAdmin theme. All rights reserved.
       </footer>
-    </div>
+    </main>
   );
 }
