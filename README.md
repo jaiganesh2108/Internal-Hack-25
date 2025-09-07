@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h1 align="center"> the Authenticity Validator for Academia system </h1>
 
-## Getting Started
+## A well-organized folder and file structure for the frontend (Next.js) and backend     (Node.js/Express) parts of this project, tailored specifically for the Authenticity Validator for Academia system.
 
-First, run the development server:
+# Frontend (Next.js) Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+nextjs-frontend/
+├── public/
+│   ├── assets/                # Images, logos, QR code icons, etc.
+│   └── favicon.ico
+├── src/
+│   ├── app/                   # Next.js app directory with routing
+│   │   ├── api/
+│   │   │   ├── auth/          # OAuth and authentication endpoints (Next.js API routes)
+│   │   │   ├── certificates/  # Certificate upload, status API routes
+│   │   │   └── verification/  # Certificate verification API routes
+│   │   ├── dashboard/         # User/admin dashboard pages
+│   │   │   ├── page.tsx       # Dashboard main page
+│   │   │   └── layout.tsx     # Dashboard layout wrapper
+│   │   ├── upload/            # Upload certificate page for universities
+│   │   │   └── page.tsx
+│   │   ├── verify/            # Verification page for employers/students
+│   │   │   └── page.tsx
+│   │   ├── admin/             # Admin management pages
+│   │   │   ├── page.tsx
+│   │   │   └── layout.tsx
+│   │   └── university/        # University-specific pages (profile, certificate status)
+│   │       ├── page.tsx
+│   │       └── layout.tsx
+│   ├── components/            # Reusable UI components
+│   │   ├── ui/                # Buttons, inputs, dialogs, modals, tables
+│   │   ├── forms/             # Certificate upload form, verify form, login form
+│   │   ├── dashboard/         # Analytics charts, notifications, stats cards
+│   │   └── blockchain/        # Web3 wallet connectors, Metamask buttons
+│   ├── hooks/                 # Custom React hooks for authentication, blockchain, data fetching
+│   │   ├── useAuth.tsx
+│   │   ├── useBlockchain.tsx
+│   │   └── useUpload.tsx
+│   ├── lib/                   # Utility functions, api calls, auth helpers
+│   ├── types/                 # TypeScript types and interfaces for certificates, users, blockchain data
+│   ├── styles/                # CSS / Tailwind styling files
+│   └── config/                # Environment configs, constants
+├── .env.local                 # Environment variables for API endpoints, keys
+├── next.config.js             # Next.js configuration
+├── package.json
+├── tsconfig.json
+├── tailwind.config.js
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Backend (Node.js / Express) Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash 
+nodejs-backend/
+├── src/
+│   ├── controllers/           # Express route handlers
+│   │   ├── authController.ts  # DigiLocker OAuth login, token handling
+│   │   ├── certificateController.ts  # Upload, issuance, blockchain registration
+│   │   └── verificationController.ts # Certificate verification logic
+│   ├── middleware/            # Middleware for auth, validation, file uploads
+│   ├── models/                # Mongoose models for Users, Certificates, Institutions
+│   ├── routes/                # Express route definitions
+│   ├── services/              # Business logic services and integrations
+│   │   ├── digilockerService.ts
+│   │   ├── blockchainService.ts
+│   │   └── aiService.ts       # Calls to Python AI microservice
+│   ├── utils/                 # Utility functions (encryption, hashing, logger)
+│   ├── config/                # DB, blockchain & service configuration files
+│   └── server.ts              # Express server entrypoint
+├── uploads/                   # Temporary upload storage (for multer)
+├── .env                       # Environment config for secrets / URLs
+├── package.json
+├── tsconfig.json
+├── docker-compose.yml         # For containerized deployment
+└── README.md
+```
