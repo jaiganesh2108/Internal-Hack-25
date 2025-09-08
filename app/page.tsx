@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Header from "./components/Header";
-
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
@@ -251,9 +251,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full bg-gray-50 py-6 text-center text-gray-400 text-xs border-t mt-12">
-        &copy; 2025 VerifyCert. Powered by NextAdmin theme. All rights reserved.
-      </footer>
+      <Footer />
     </main>
   );
 }

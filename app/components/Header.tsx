@@ -26,16 +26,22 @@ export default function Header() {
       </div>
       <nav className="flex gap-4">
         <Link
-          href="/login"
+          href="/"
           className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition"
         >
-          Login
+          University login
         </Link>
         <Link
-          href="/signup"
+          href="/"
           className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition"
         >
-          Sign Up
+          Employer/Student login
+        </Link>
+        <Link
+          href="/"
+          className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition"
+        >
+          Admin login
         </Link>
       </nav>
     </header>
