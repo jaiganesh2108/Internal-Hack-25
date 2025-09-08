@@ -77,4 +77,37 @@ nodejs-backend/
 ├── docker-compose.yml         # For containerized deployment
 └── README.md
 ```
+
+### Steps to Clone & Run a Next.js Project
+## 1. Clone the Repository
+
+## Open your terminal (VS Code / Git Bash / Command Prompt) and run:
+```bash
+git clone https://github.com/jaiganesh2108/Internal-Hack-25.git
+```
+
+## 2. Go Into the Project Folder
+```bash
+cd Internal-Hack-25
+```
+
+## 3. Install Dependencies
+### Most Next.js projects use npm. Run one of the following:
+```bash
+npm install
+```
+
+## 4. Run the Development Server
+### Start the local dev server with:
+```bash
+npm run dev
+```
+
+## 5. Open in Browser
+```bash
+http://localhost:3000
+```
+
+---
+
 <h1 align="center"> Thank You! </h1>
