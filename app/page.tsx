@@ -1,22 +1,12 @@
 import Link from 'next/link';
+import Header from "./components/Header";
+
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex flex-col items-center justify-between">
       {/* Header */}
-      <header className="w-full flex justify-between items-center px-8 py-6 bg-white shadow-sm">
-        <div className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-indigo-600">VerifyCert</span>
-        </div>
-        <nav className="flex gap-4">
-          <Link href="/login" className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition">
-            Login
-          </Link>
-          <Link href="/signup" className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition">
-            Sign Up
-          </Link>
-        </nav>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="w-full min-h-screen bg-grid flex items-center justify-center px-6 py-12">
