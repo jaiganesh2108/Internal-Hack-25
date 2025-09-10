@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex flex-col items-center justify-between">
@@ -38,19 +39,19 @@ export default function Home() {
             {/* CTA Buttons */}
             <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-10">
               <Link
-                href="/verify"
+                href="/"
                 className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-full shadow hover:bg-indigo-700 transition-colors"
               >
                 Verify Now
               </Link>
               <Link
-                href="/bulk-upload"
-                className="px-6 py-3 bg-gray-100 text-indigo-700 font-semibold rounded-full shadow hover:bg-gray-200 transition-colors"
-              >
-                Bulk Upload
+                  href="/upload"
+                  className="px-6 py-3 bg-gray-100 text-indigo-700 font-semibold rounded-full shadow hover:bg-gray-200 transition-colors"
+                >
+                  Bulk Upload
               </Link>
               <Link
-                href="/dashboard"
+                href="/"
                 className="px-6 py-3 bg-gray-100 text-indigo-700 font-semibold rounded-full shadow hover:bg-gray-200 transition-colors"
               >
                 Dashboard
@@ -69,7 +70,7 @@ export default function Home() {
               </p>
               <p className="text-gray-700">
                 <span className="font-semibold">VerifyCert</span> offers a smart digital
-                platform integrating <span className="font-semibold">AI, OCR, and blockchain</span> 
+                platform integrating <span className="font-semibold">AI, OCR, and blockchain </span> 
                 to authenticate credentials instantly — ensuring trust and security across
                 institutions.
               </p>
