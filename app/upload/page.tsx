@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import CryptoJS from "crypto-js";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -9,6 +9,7 @@ import {
   CloudArrowUpIcon,
   AcademicCapIcon,
   UserCircleIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { QRCodeCanvas } from "qrcode.react";
 
@@ -28,27 +29,37 @@ const issuers = [
 export default function UploadPage() {
   const [selectedUniversity, setUniversity] = useState("");
   const [selectedIssuer, setIssuer] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [studentFiles, setStudentFiles] = useState({});
+  const [search, setSearch] = useState("");
 
-  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = async (event) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
 
     setLoading(true);
     setResults([]);
+    setStudentFiles({});
 
-    const studentsMap: Record<string, File[]> = {};
+    const studentsMap = {};
     files.forEach((file) => {
-      const parts = (file as any).webkitRelativePath.split("/");
-      const student = parts[1];
+      // If uploaded as folder -> use folder name
+      // If drag-drop -> fallback from file name
+      const parts = file.webkitRelativePath
+        ? file.webkitRelativePath.split("/")
+        : [file.name];
+      const student =
+        parts.length > 1 ? parts[1] : file.name.split("_")[0] || "Unknown";
+
       if (!studentsMap[student]) studentsMap[student] = [];
       studentsMap[student].push(file);
     });
 
-    const output: any[] = [];
+    setStudentFiles(studentsMap); // preview before hashing
 
+    const output = [];
     for (const student of Object.keys(studentsMap)) {
       const files = studentsMap[student];
       files.sort((a, b) => a.name.localeCompare(b.name));
@@ -60,9 +71,7 @@ export default function UploadPage() {
         const fileHash = CryptoJS.SHA256(wordArray).toString();
         folderContent += fileHash;
       }
-
       const folderHash = CryptoJS.SHA256(folderContent).toString();
-
       output.push({
         student,
         hash: folderHash,
@@ -87,16 +96,18 @@ export default function UploadPage() {
       ? 0
       : selectedIssuer === ""
       ? 1
-      : results.length === 0 && !loading
+      : Object.keys(studentFiles).length === 0 && !loading
       ? 2
       : results.length > 0
       ? 3
-      : 0;
+      : 2;
 
-  const downloadQRCode = (student: string, hash: string) => {
-    const canvas = document.getElementById(`qr-${student}`) as HTMLCanvasElement;
+  const downloadQRCode = (student) => {
+    const canvas = document.getElementById(`qr-${student}`);
     if (!canvas) return;
-    const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    const pngUrl = canvas
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
     const link = document.createElement("a");
     link.href = pngUrl;
     link.download = `${student}_qr.png`;
@@ -105,34 +116,42 @@ export default function UploadPage() {
     link.remove();
   };
 
+  // Search filter
+  const filteredResults = results.filter((r) =>
+    r.student.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex flex-col">
+    <main className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex flex-col">
       <Header />
 
       <section className="flex-1 w-full px-4 py-8 sm:px-6 lg:px-12 flex items-center justify-center">
         <div className="w-full max-w-5xl bg-white shadow-2xl rounded-3xl p-8 sm:p-12 border border-gray-200">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-10 sm:mb-14 text-center">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-indigo-900 mb-12 text-center">
             Bulk Upload Certificates
           </h1>
 
           {/* Stepper */}
-          <div className="flex justify-between items-center mb-10 sm:mb-14 gap-4 relative">
+          <div className="flex justify-between items-center mb-10 gap-4 relative">
             {steps.map((step, idx) => {
               const isActive = idx === activeStep;
               const isCompleted = idx < activeStep;
-
               return (
-                <div key={idx} className="flex-1 flex flex-col items-center relative">
+                <div
+                  key={idx}
+                  className="flex-1 flex flex-col items-center relative"
+                >
                   {idx < steps.length - 1 && (
                     <div className="absolute top-6 left-1/2 w-full h-1 transform -translate-x-1/2 z-0">
                       <div
                         className={`h-1 rounded-full transition-all duration-500 ${
-                          isCompleted ? "bg-indigo-500 w-full" : "bg-gray-300 w-full"
+                          isCompleted
+                            ? "bg-indigo-500 w-full"
+                            : "bg-gray-300 w-full"
                         }`}
                       ></div>
                     </div>
                   )}
-
                   <div
                     className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-full border-2 transition-colors duration-300 ${
                       isCompleted
@@ -143,11 +162,14 @@ export default function UploadPage() {
                     }`}
                     aria-current={isActive ? "step" : undefined}
                   >
-                    {isCompleted ? <CheckCircleIcon className="w-6 h-6" /> : step.icon}
+                    {isCompleted ? (
+                      <CheckCircleIcon className="w-6 h-6" />
+                    ) : (
+                      step.icon
+                    )}
                   </div>
-
                   <span
-                    className={`mt-3 text-xs sm:text-sm font-semibold text-center transition-colors duration-300 ${
+                    className={`mt-3 text-xs sm:text-sm font-semibold text-center ${
                       isActive
                         ? "text-indigo-800"
                         : isCompleted
@@ -164,7 +186,10 @@ export default function UploadPage() {
 
           {/* University Dropdown */}
           <div className="mb-6 sm:mb-8">
-            <label htmlFor="university-select" className="block mb-2 font-semibold text-gray-900 text-lg">
+            <label
+              htmlFor="university-select"
+              className="block mb-2 font-semibold text-indigo-900 text-lg"
+            >
               University Name
             </label>
             <select
@@ -172,8 +197,6 @@ export default function UploadPage() {
               value={selectedUniversity}
               onChange={(e) => setUniversity(e.target.value)}
               className="w-full p-4 border border-indigo-400 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-400 bg-white text-gray-900 placeholder-gray-700 transition disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
-              aria-required="true"
-              aria-label="Select University"
             >
               <option value="" className="text-gray-500">
                 Select University
@@ -188,7 +211,10 @@ export default function UploadPage() {
 
           {/* Issuer Dropdown */}
           <div className="mb-8">
-            <label htmlFor="issuer-select" className="block mb-2 font-semibold text-gray-900 text-lg">
+            <label
+              htmlFor="issuer-select"
+              className="block mb-2 font-semibold text-indigo-900 text-lg"
+            >
               Issuer Name
             </label>
             <select
@@ -196,9 +222,7 @@ export default function UploadPage() {
               value={selectedIssuer}
               onChange={(e) => setIssuer(e.target.value)}
               disabled={!selectedUniversity}
-              className="w-full p-4 border border-indigo-200 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-400 bg-white text-gray-900 placeholder-gray-700 transition disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
-              aria-required="true"
-              aria-label="Select Issuer"
+              className="w-full p-4 border border-indigo-200 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-400 bg-white text-gray-900 transition disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
             >
               <option value="" className="text-gray-500">
                 Select Issuer
@@ -219,90 +243,124 @@ export default function UploadPage() {
             onDrop={(e) => {
               e.preventDefault();
               setDragActive(false);
-              const inputElement = document.getElementById("fileInput") as HTMLInputElement;
+              const inputElement = document.getElementById("fileInput");
               if (inputElement) {
                 const dt = e.dataTransfer;
                 if (dt?.files?.length) {
                   const dataTransfer = new DataTransfer();
-                  Array.from(dt.files).forEach((file) => dataTransfer.items.add(file));
+                  Array.from(dt.files).forEach((file) =>
+                    dataTransfer.items.add(file)
+                  );
                   inputElement.files = dataTransfer.files;
-                  handleUpload({ target: inputElement } as any);
+                  handleUpload({ target: inputElement });
                 }
               }
             }}
-            className={`mb-10 border-4 border-dashed rounded-3xl p-10 text-center cursor-pointer transition-colors duration-300 select-none ${
-              !selectedUniversity || !selectedIssuer
-                ? "border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed"
-                : dragActive
-                ? "border-indigo-600 bg-indigo-50 text-indigo-800"
-                : "border-indigo-400 bg-indigo-50 text-indigo-800 hover:border-indigo-600"
-            }`}
+            className={`mb-10 border-4 border-dashed rounded-3xl p-10 text-center cursor-pointer transition-colors duration-300 select-none relative
+              ${
+                !selectedUniversity || !selectedIssuer
+                  ? "border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed"
+                  : dragActive
+                  ? "border-indigo-600 bg-indigo-50 text-indigo-800"
+                  : "border-indigo-500 bg-indigo-100 text-indigo-800 hover:border-indigo-600"
+              }
+            `}
             onClick={() => {
               if (selectedUniversity && selectedIssuer) {
                 const input = document.getElementById("fileInput");
                 input?.click();
               }
             }}
-            aria-disabled={!selectedUniversity || !selectedIssuer}
-            aria-label="Upload folder containing certificates"
           >
             <CloudArrowUpIcon className="w-14 h-14 mx-auto mb-6" />
             <input
               id="fileInput"
               type="file"
-              webkitdirectory="true"
+              directory=""
+              webkitdirectory=""
               multiple
               onChange={handleUpload}
               className="hidden"
               disabled={!selectedUniversity || !selectedIssuer}
             />
-            <p className={`text-lg sm:text-xl font-semibold ${selectedUniversity && selectedIssuer ? "text-indigo-800" : "text-gray-500"}`}>
+            <p
+              className={`text-lg sm:text-xl font-semibold ${
+                selectedUniversity && selectedIssuer
+                  ? "text-indigo-800"
+                  : "text-gray-500"
+              }`}
+            >
               {selectedUniversity && selectedIssuer
                 ? "Click or drag folder here to upload certificates"
                 : "Select university and issuer to enable upload"}
             </p>
+            {Object.keys(studentFiles).length > 0 && (
+              <div className="mt-6 bg-gray-50 border rounded-xl p-4 shadow w-full text-left max-h-40 overflow-y-auto">
+                <div className="text-indigo-700 font-bold mb-2">
+                  Folders Selected:
+                </div>
+                {Object.keys(studentFiles).map((student) => (
+                  <div key={student} className="mb-2">
+                    <span className="font-semibold">{student}:</span>{" "}
+                    {studentFiles[student].map((file) => file.name).join(", ")}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Loading */}
           {loading && (
-            <div className="text-center mb-10" role="status" aria-live="polite" aria-atomic="true">
-              <p className="text-indigo-700 font-semibold animate-pulse text-lg sm:text-xl">
+            <div className="flex justify-center items-center h-24">
+              <div className="border-4 border-indigo-600 border-t-transparent rounded-full w-10 h-10 animate-spin mr-4"></div>
+              <span className="text-indigo-600 font-semibold text-lg sm:text-xl animate-pulse">
                 Hashing student folders... Please wait.
-              </p>
+              </span>
+            </div>
+          )}
+
+          {/* Search */}
+          {results.length > 0 && (
+            <div className="flex items-center gap-2 mb-6 max-w-md mx-auto">
+              <MagnifyingGlassIcon className="w-6 h-6 text-indigo-400" />
+              <input
+                type="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full px-4 py-2 border border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                placeholder="Search student..."
+              />
             </div>
           )}
 
           {/* Results */}
           {results.length > 0 && (
-            <section className="mt-10" aria-live="polite" aria-atomic="true">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <section className="mt-8" aria-live="polite" aria-atomic="true">
+              <h2 className="text-2xl sm:text-3xl font-bold text-indigo-900 mb-6 flex items-center gap-3">
                 <CheckCircleIcon className="w-7 h-7 text-green-600 animate-pulse" />
                 Upload Results
               </h2>
-
               <div className="grid gap-6 max-h-[28rem] overflow-y-auto sm:grid-cols-2 lg:grid-cols-3">
-                {results.map((r, i) => (
+                {filteredResults.map((r, i) => (
                   <article
                     key={i}
-                    className="p-5 rounded-3xl bg-green-50 border border-green-200 shadow hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    className="p-5 rounded-3xl bg-indigo-50 border border-indigo-200 shadow-lg hover:shadow-xl transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     tabIndex={0}
-                    aria-label={`Result for student ${r.student}`}
                   >
                     <div className="flex justify-between items-center mb-2">
-                      <h3 className="font-bold text-green-700 text-lg truncate">{r.student}</h3>
-                      <span
-                        className="px-4 py-1 text-xs bg-green-200 text-green-800 rounded-full font-semibold select-none"
-                        aria-label="Verified status"
-                      >
+                      <h3 className="font-bold text-indigo-700 text-lg truncate">
+                        {r.student}
+                      </h3>
+                      <span className="px-4 py-1 text-xs bg-green-200 text-green-800 rounded-full font-semibold select-none">
                         Verified
                       </span>
                     </div>
-                    <p className="text-sm font-mono text-green-800 break-words select-text">{r.hash}</p>
-                    <p className="text-green-700 mt-1 text-sm">
-                      University: {r.university} | Issuer: {r.issuer}
+                    <p className="text-sm font-mono text-indigo-800 break-words select-text">
+                      {r.hash}
                     </p>
-
-                    {/* QR Code */}
+                    <p className="text-indigo-700 mt-2 text-sm mb-2">
+                      University: {r.university} <br /> Issuer: {r.issuer}
+                    </p>
                     <div className="mt-3 flex flex-col items-center gap-2">
                       <QRCodeCanvas
                         id={`qr-${r.student}`}
@@ -310,14 +368,19 @@ export default function UploadPage() {
                         size={128}
                       />
                       <button
-                        onClick={() => downloadQRCode(r.student, r.hash)}
-                        className="px-3 py-1 bg-indigo-600 text-white rounded-xl text-sm hover:bg-indigo-700 transition"
+                        onClick={() => downloadQRCode(r.student)}
+                        className="px-3 py-1 bg-indigo-600 text-white rounded-xl text-sm hover:bg-indigo-700 transition focus:outline-none focus:ring-2 focus:ring-indigo-600"
                       >
                         Download QR
                       </button>
                     </div>
                   </article>
                 ))}
+                {filteredResults.length === 0 && (
+                  <div className="col-span-full text-center text-indigo-500 font-semibold p-6">
+                    No matches found.
+                  </div>
+                )}
               </div>
             </section>
           )}
