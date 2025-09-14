@@ -39,7 +39,7 @@ export default function Home() {
             {/* CTA Buttons */}
             <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-10">
               <Link
-                href="/"
+                href="/verifypage"
                 className="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-full shadow hover:bg-indigo-700 transition-colors"
               >
                 Verify Now
