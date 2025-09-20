@@ -33,7 +33,7 @@ export default function Home() {
             <p className="text-lg text-gray-600 mb-8">
               Trusted by universities, employers, and institutions, our platform securely
               verifies academic and professional credentials using
-              <span className="font-semibold"> blockchain-backed technology</span>.
+              <span className="font-semibold"> blockchain-backed technology! </span>.
             </p>
 
             {/* CTA Buttons */}
