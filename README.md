@@ -5,6 +5,7 @@
 # Frontend (Next.js) Structure
 
 ```bash
+
 nextjs-frontend/
 ├── public/
 │   ├── assets/                # Images, logos, QR code icons, etc.
